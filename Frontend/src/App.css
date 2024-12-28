@@ -344,3 +344,10 @@ body {
 .chat-container {
     /* border: 1px solid; */
 }
+
+.msg-box {
+    height: 430px;
+    border: 1px solid;
+    min-height: 430px;
+    max-height: 430px;
+}

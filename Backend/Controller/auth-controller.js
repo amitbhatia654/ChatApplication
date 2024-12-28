@@ -48,7 +48,7 @@ const allUsers = async (req, res) => {
 
         const query = {
             ...search ? { name: { $regex: search, $options: "i" } } : {},
-            email: { $ne: "admin@gmail.com" } // Exclude admin@gmail.com
+            email: { $ne: "admin@gmail.com1" } // Exclude admin@gmail.com
         };
 
 

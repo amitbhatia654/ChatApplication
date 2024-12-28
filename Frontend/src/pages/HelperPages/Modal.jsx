@@ -12,7 +12,7 @@ export default function Modal({ setShowModal, title, children, otherFunc }) {
                 className="btn-close"
                 aria-label="Close"
                 onClick={() => {
-                  setShowModal(false), otherFunc({});
+                  setShowModal(false);
                 }}
               ></button>
             </div>
