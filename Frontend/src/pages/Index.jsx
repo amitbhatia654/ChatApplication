@@ -1,14 +1,12 @@
 import React from "react";
 import Header from "./Header";
-import HomePageLayout from "./HomePage/HomePageLayout";
-import Footer from "./Footer";
+import { Outlet } from "react-router-dom";
 
 export default function Index() {
   return (
     <div>
       <Header></Header>
-      <HomePageLayout></HomePageLayout>
-      {/* <Footer></Footer> */}
+      <Outlet></Outlet>
     </div>
   );
 }

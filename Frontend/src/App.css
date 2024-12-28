@@ -326,3 +326,21 @@ body {
     color: blue !important;
     border-radius: 20px;
 }
+
+
+
+.chat-bar {
+    width: 200px;
+    border: 1px solid black;
+    height: 580px;
+
+}
+
+.message-box {
+    border: 1px solid black;
+    width: 100%;
+}
+
+.chat-container {
+    /* border: 1px solid; */
+}

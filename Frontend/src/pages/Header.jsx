@@ -15,7 +15,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import notebookLogo from "../../notebook.jpg";
+// import notebookLogo from "../../notebook.jpg";
 // import { removeAllFolders } from "../reduxStore/UserSlice";
 
 export default function Header() {
@@ -38,7 +38,8 @@ export default function Header() {
         <div
           style={{
             marginLeft: "14px",
-            margin:'2px'
+            margin: "2px",
+            width: "160px",
           }}
         >
           <span
@@ -47,12 +48,13 @@ export default function Header() {
             }}
             style={{ cursor: "pointer" }}
           >
-            <img
+            {/* <img
               src={notebookLogo}
               alt="cloud Notebook"
               height={"55px"}
               width={"150px"}
-            />
+            /> */}
+            <h4 className="text-primary fw-bold">CHAT APP</h4>
           </span>
         </div>
 
