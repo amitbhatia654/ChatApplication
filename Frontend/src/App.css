@@ -1,0 +1,328 @@
+.sidenav-small {
+    width: 35px;
+}
+
+.sidenav-full {
+    min-width: 190px;
+
+}
+
+:root {
+    --box-color: #E7E7EE;
+}
+
+
+body {
+    background-color: var(--box-color);
+}
+
+.main-body {
+    /* background-color: #c3c3c0; */
+    border-top: 1px solid rgb(197, 197, 236);
+}
+
+.topic-heading {
+    text-decoration: underline;
+    font-weight: bold;
+    font-size: 22px;
+    margin-left: 25px;
+    /* color: rgb(21, 17, 87); */
+    text-transform: uppercase;
+    color: blue;
+}
+
+
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: 50px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: blue;
+    -webkit-mask: radial-gradient(circle closest-side at 50% 40%, #0000 94%, #000);
+    transform-origin: 50% 40%;
+    animation: l25 1s infinite linear;
+}
+
+@keyframes l25 {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+
+/* if you want to use this scroll bar any where just add this class name and set max-height to that div whatever we want  */
+
+
+.scrollable-container {
+    overflow: auto;
+}
+
+
+.scrollable-container::-webkit-scrollbar {
+    width: 8px;
+    /* Width of the scrollbar */
+}
+
+.scrollable-container::-webkit-scrollbar-track {
+    background: #b8b2b2;
+    /* Track color */
+}
+
+.scrollable-container::-webkit-scrollbar-thumb {
+    background-color: #47478c;
+    /* Scrollbar color */
+    border-radius: 10px;
+    /* Rounded edges */
+}
+
+.common-btn {
+
+    color: white;
+    background-color: #47478c;
+    border: 0px;
+    padding-left: 21px;
+    padding-right: 21px;
+    font-size: 17px;
+    min-height: 40px;
+    max-height: 40px;
+    margin-top: 8px;
+    margin-left: 10px;
+}
+
+.common-btn:hover {
+    color: #47478c;
+    background-color: white;
+    transition: 0.3s;
+    border: 1px solid;
+}
+
+.pagination {
+    margin-top: 5px;
+}
+
+.border1 {
+    border: 1px solid blue;
+}
+
+
+.tableStyle .MuiTableCell-root {
+    text-align: center;
+}
+
+.tableBodyStyle .MuiTableCell-root {
+    text-align: center;
+    font-size: 14px;
+}
+
+
+
+.upper-side {
+    height: 15px;
+    width: 70px;
+    background-color: #0e2e85;
+    position: relative;
+    margin-bottom: -1px;
+    clip-path: polygon(0 0, 80% 0, 100% 100%, 0 100%);
+    border-top-left-radius: 8px;
+}
+
+.boxes {
+    height: 110px;
+    width: 140px;
+    background-color: #0e2e85;
+    color: white;
+    box-shadow: 1px 3px 8px black;
+}
+
+
+
+
+
+.create-box {
+    height: 110px;
+    width: 140px;
+    background-color: rgb(1, 1, 148);
+    /* box-shadow: 1px 2px 8px black; */
+}
+
+.upper-side-create {
+    height: 15px;
+    width: 70px;
+    background-color: rgb(1, 1, 148);
+    position: relative;
+    margin-bottom: -1px;
+    clip-path: polygon(0 0, 80% 0, 100% 100%, 0 100%);
+    /* border-bottom: 1px solid rgb(192, 75, 75); */
+    border-top-left-radius: 8px;
+}
+
+.inner-box {
+    height: 80px;
+    color: white;
+    padding: 10px;
+    font-size: 19px;
+    cursor: pointer;
+}
+
+.folder-heading {
+    color: blue;
+    /* text-decoration: underline; */
+    text-shadow: 12px 5px 6px white;
+    text-transform: uppercase;
+}
+
+
+
+
+.folder-container {
+    min-height: 69vh;
+    max-height: 69vh;
+    padding-left: 50px;
+    padding-top: 20px;
+    background-color: #DFDBE5;
+    background-image: url("data:image/svg+xml,%3Csvg width='42' height='44' viewBox='0 0 42 44' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Page-1' fill='none' fill-rule='evenodd'%3E%3Cg id='brick-wall' fill='%239C92AC' fill-opacity='0.21'%3E%3Cpath d='M0 0h42v44H0V0zm1 1h40v20H1V1zM0 23h20v20H0V23zm22 0h20v20H22V23z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    /* border: 1px solid; */
+}
+
+
+.border1 {
+    border: 1px solid black;
+}
+
+.squ-box {
+    box-shadow: 2px 3px 5px grey;
+}
+
+
+
+.ql-style .ql-editor {
+    min-height: 72vh;
+    max-height: 72vh;
+    background-color: #ffffff;
+}
+
+
+
+.data-div {
+    background-color: #fbfcf6;
+
+}
+
+
+.topicNames {
+    margin-top: 3px;
+    box-shadow: 2px 2px 4px grey;
+    margin-top: 2px;
+    font-size: 17px;
+    padding-left: 8px;
+}
+
+.names {
+    cursor: pointer;
+    max-width: 126px;
+    min-width: 126px;
+    white-space: nowrap;
+    /* margin-left: 0px; */
+    /* margin-right: 4px; */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.topic-div {
+    padding-right: 3px;
+    /* border-bottom: 1px solid grey; */
+
+}
+
+
+.new-topic {
+    margin-top: 4px;
+    text-align: center;
+    box-shadow: 1px 2px 4px grey;
+    background-color: blue;
+    color: white;
+    font-size: 17px;
+    padding: 3px;
+    cursor: pointer;
+}
+
+.actionBtn {
+    color: white;
+}
+
+.currentTopic {
+    color: blue;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+
+    /* Target devices with width <= 768px */
+    .heading {
+        width: 160px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+    }
+}
+
+.homepage {
+    /* background-color: #c0bbbb; */
+    /* background-color: #051f44; */
+    height: 91vh;
+    /* color: white; */
+
+}
+
+.login-screen {
+    background-color: #000 !important;
+    color: #0e5985;
+}
+
+.folder-name {
+    background-color: #d3d1f3;
+    margin-left: 5px;
+    padding: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-top: 2px;
+    display: inline-block;
+    border-radius: 5px;
+    /* text-decoration: underline; */
+    text-transform: capitalize;
+    color: blue;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.topic-name {
+    font-size: 20px;
+}
+
+.topic-name-order {
+    box-shadow: 1px 2px 2px grey;
+    width: 300px;
+    cursor: grab;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+}
+
+.myheader {
+    background-color: #e6ebf1;
+    /* box-shadow: 1px 3px 2px rgb(228, 227, 234); */
+}
+
+.mymodal {
+    background-color: rgb(225, 226, 239);
+    box-shadow: 2px 2px 7px rgb(1, 1, 239);
+    color: blue !important;
+    border-radius: 20px;
+}
