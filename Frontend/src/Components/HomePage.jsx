@@ -5,14 +5,18 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { Button, TextField } from "@mui/material";
 import axiosInstance from "../ApiManager";
 import { useSelector } from "react-redux";
+import { io } from "socket.io-client";
 
 export default function HomePage() {
   const user = useSelector((data) => data.loginUser);
+  const socket = io();
   const [newChatModal, setNewChatModal] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
   const [allChats, setAllChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState({});
   const [message, setMessage] = useState("");
+
+  socket.on("connection", (id) => console.log(id, "socket"));
 
   const handleSubmit = async (values) => {
     try {
@@ -125,7 +129,7 @@ export default function HomePage() {
                             data.senderId == user.id && "text-end"
                           } `}
                         >
-                          {data.message}
+                          <span className="msg-span">{data.message}</span>
                         </h6>
                       );
                     })}

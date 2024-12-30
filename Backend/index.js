@@ -3,14 +3,12 @@ const express = require("express");
 const bodyParser = require('body-parser');
 const { app, server } = require("./socket/socket");
 const AuthRoute = require('./Router/auth-router');
-const NoteBookRoute = require("./Router/notebook-router")
 const chatRoute = require("./Router/chat-router")
 
 
 const allowedOrigins = [
     "http://localhost:5173",
     "http://192.168.29.68:5173",
-    "https://online-note-book.vercel.app"
 ];
 
 var cors = require('cors');
@@ -38,7 +36,6 @@ const connectDb = require("./utils/db");
 
 app.use(express.json()) // this is the middleware
 app.use('/api/auth', AuthRoute);
-// app.use("/api", NoteBookRoute);
 app.use("/api", chatRoute);
 
 

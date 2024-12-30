@@ -351,3 +351,10 @@ body {
     min-height: 430px;
     max-height: 430px;
 }
+
+.msg-span {
+    background-color: #bfcbee;
+    padding:2px;
+
+
+}
