@@ -1,22 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import Modal from "../pages/HelperPages/Modal";
 import { Form, Formik } from "formik";
 import Autocomplete from "@mui/material/Autocomplete";
 import { Button, TextField } from "@mui/material";
 import axiosInstance from "../ApiManager";
 import { useSelector } from "react-redux";
-import { io } from "socket.io-client";
+import { useSocketContext } from "./SocketContext";
 
 export default function HomePage() {
   const user = useSelector((data) => data.loginUser);
-  const socket = io();
+
   const [newChatModal, setNewChatModal] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
   const [allChats, setAllChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState({});
   const [message, setMessage] = useState("");
+  const { onlineUsers, socket } = useSocketContext();
 
-  socket.on("connection", (id) => console.log(id, "socket"));
+  const selectedChatRef = useRef(selectedChat);
+  const lastMessageRef = useRef(null);
+
+  useEffect(() => {
+    selectedChatRef.current = selectedChat; // Update ref when selectedChat changes
+  }, [selectedChat]);
 
   const handleSubmit = async (values) => {
     try {
@@ -39,6 +45,13 @@ export default function HomePage() {
           ?._id,
         message,
       });
+
+      setSelectedChat((prev) => ({
+        ...prev,
+        messages: [...prev.messages, res.data.m1],
+      }));
+
+      console.log(res, "when user send the message");
 
       if (res.status == 200) setMessage("");
     } catch (error) {
@@ -67,12 +80,47 @@ export default function HomePage() {
 
   useEffect(() => {
     fetchAllUsers();
-    fetchAllChats();
   }, []);
+
+  useEffect(() => {
+    fetchAllChats();
+  }, [selectedChat]);
+
+  useEffect(() => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [selectedChat.messages]);
+
+  useEffect(() => {
+    const checkMessage = socket?.on("new-message", (data) => {
+      console.log(data, "check message");
+
+      const res = selectedChatRef.current?.participants?.some(
+        (participant) => participant._id === data?.senderId
+      );
+
+      if (res) {
+        // Add the new message to the messages array
+        setSelectedChat((prev) => ({
+          ...prev,
+          messages: [...prev.messages, data],
+        }));
+      }
+    });
+
+    return () => socket?.off("new-message");
+  }, [socket]);
 
   const chats = allChats
     .flatMap((conversation) => conversation.participants)
     .filter((participant) => participant._id != user.id);
+
+  // console.log(chats, "the chats is");
+
+  const isOnlineUser = (userId) => {
+    return onlineUsers.includes(userId);
+  };
 
   return (
     <>
@@ -80,17 +128,19 @@ export default function HomePage() {
         <div className="d-flex">
           <div className="chat-bar">
             <button
-              className="bbtn btn-primary"
+              className="bbtn btn-primary m-1"
               onClick={() => setNewChatModal(true)}
             >
               New Chat{" "}
             </button>
+
             <h4>My Chats</h4>
             <div>
               {chats.length > 0 ? (
                 chats.map((chat, id) => (
                   <h6
                     key={id}
+                    className={`${isOnlineUser(chat._id) && "text-danger"}`}
                     onClick={() => {
                       const result = allChats.find((conversation) =>
                         conversation.participants.some(
@@ -101,7 +151,7 @@ export default function HomePage() {
                       setSelectedChat(result);
                     }}
                   >
-                    {chat.name}
+                    {chat.name} {isOnlineUser(chat._id)}
                   </h6>
                 ))
               ) : (
@@ -109,6 +159,8 @@ export default function HomePage() {
               )}
             </div>
           </div>
+
+          {console.log(selectedChat, "the selected chat is ")}
 
           <div className="message-box">
             {selectedChat?._id ? (
@@ -121,10 +173,14 @@ export default function HomePage() {
                 </h5>
                 <div className="msg-box scrollable-container">
                   {selectedChat.messages.length > 0 &&
-                    selectedChat.messages.map((data) => {
-                      console.log(data, "theeh");
+                    selectedChat.messages.map((data, key) => {
+                      const isLastMessage =
+                        key === selectedChat.messages.length - 1;
+
                       return (
                         <h6
+                          key={key}
+                          ref={isLastMessage ? lastMessageRef : null}
                           className={`${
                             data.senderId == user.id && "text-end"
                           } `}

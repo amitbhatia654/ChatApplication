@@ -15,6 +15,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { addUser } from "../reduxStore/UserSlice";
 // import notebookLogo from "../../notebook.jpg";
 // import { removeAllFolders } from "../reduxStore/UserSlice";
 
@@ -84,7 +85,7 @@ export default function Header() {
           <div className="mt-1">
             <span className="fw-bold   text-primary fs-5 ">
               {" "}
-              {userData?.name ?? "user"}
+              [ {userData?.id} ] {userData?.name ?? "user"}
             </span>
             <Tooltip title="My Profile" placement="bottom-end">
               <IconButton onClick={handleOpenUserMenu}>
@@ -127,7 +128,7 @@ export default function Header() {
                     localStorage.removeItem("token");
                     localStorage.removeItem("user");
                     localStorage.removeItem("allFolders");
-                    // dispatch(removeAllFolders([]));
+                    dispatch(addUser({}));
                   }}
                 >
                   <LogoutIcon className="mx-2" /> Logout

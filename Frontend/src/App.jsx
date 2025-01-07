@@ -2,11 +2,14 @@ import "./App.css";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Toaster } from "react-hot-toast";
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import PrivateRoute from "./pages/PrivateRoute";
 import ErrorPage from "./pages/ErrorPage";
 import LoadingComponent from "./Components/LoadingComponent";
 import HomePage from "./Components/HomePage";
+import { io } from "socket.io-client";
+import { useDispatch, useSelector } from "react-redux";
+import { addSocket, removeSocket } from "./reduxStore/UserSlice";
 
 const MyProfile = lazy(() => import("./pages/MyProfile"));
 const UpdateProfile = lazy(() => import("./pages/UpdateProfile"));
@@ -14,6 +17,10 @@ const LoginRegister = lazy(() => import("./pages/Users/LoginRegister"));
 const UsersDetails = lazy(() => import("./pages/Users/UsersDetails"));
 
 function App() {
+  // const [socket, setSocket] = useState("");
+  // const user = useSelector((data) => data.loginUser);
+  const dispatch = useDispatch();
+
   const isUserLogin = () => {
     return Boolean(localStorage.getItem("token"));
   };

@@ -28,8 +28,25 @@ const activeFolderSlice = createSlice({
     },
 });
 
+
+const socketSlice = createSlice({
+    name: "sockets",
+    initialState: {},
+    reducers: {
+        addSocket(state, action) {
+            return action.payload
+        },
+
+        removeSocket() {
+            return {}
+        }
+    }
+})
+
 export const { add: addUser, remove: removeUser } = userSlice.actions;
 export const { addFolder, removeFolder } = activeFolderSlice.actions;
+export const { addSocket, removeSocket } = socketSlice.actions;
 
 export const userReducer = userSlice.reducer;
 export const activeFolderReducer = activeFolderSlice.reducer;
+export const socketReducer = socketSlice.reducer

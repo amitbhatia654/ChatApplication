@@ -2,6 +2,7 @@ const User = require("../Models/UserModel")
 const Subject = require("../Models/SubjectModel");
 const Message = require("../Models/MessagesModel");
 const conversation = require("../Models/convertsationModel");
+const { recieverSocketId, io } = require("../socket/socket");
 
 
 
@@ -80,6 +81,7 @@ const getAllChats = async (req, res) => {
             select: "-password -profilePic"
         }).populate('messages');
 
+
         res.status(200).send({ message: "result found", chats })
 
     } catch (error) {
@@ -88,6 +90,7 @@ const getAllChats = async (req, res) => {
     }
 
 }
+
 
 
 const SendMessage = async (req, res) => {
@@ -111,7 +114,12 @@ const SendMessage = async (req, res) => {
             await chats.save();
         }
 
-        res.status(200).send({ message: "message send", chats })
+
+        const reciSocketId = recieverSocketId(receiverId)
+        if (reciSocketId)
+            io.to(reciSocketId).emit("new-message", m1)
+
+        res.status(200).send({ message: "message send", m1 })
     } catch (error) {
         console.log(error, 'error')
         res.status(205).send(error)

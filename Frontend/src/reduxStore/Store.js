@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { activeFolderReducer, userReducer } from './UserSlice'
+import { activeFolderReducer, socketReducer, userReducer } from './UserSlice'
 
 const store = configureStore({
     reducer: {
         loginUser: userReducer,
-        activeFolder: activeFolderReducer
+        activeFolder: activeFolderReducer,
+        user_socket: socketReducer
+
     }
 })
 

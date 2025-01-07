@@ -18,45 +18,34 @@ const io = new Server(server, {
     }
 })
 
+const userSocketMap = {};
+
+const recieverSocketId = (userId) => {
+    return userSocketMap[userId]
+}
 
 io.on("connection", (socket) => {
-    console.log('user connected socket', socket.id)
-    socket.emit("connecting", socket.id)
-    socket.on("message", ({ roomId, message }) => {
-        // console.log()
-        socket.to(roomId).emit("recieve-msg", message)
-    })
+    console.log('user connected', socket.id)
 
+    const userId = socket.handshake.query.userId;
+    if (userId != undefined) userSocketMap[userId] = socket.id
 
-    socket.on("setup", (userData) => {
-        socket.join(userData.id)
-        socket.emit("connected")
-    })
-
-    socket.on('join chat', (room) => {
-        socket.join(room)
-        console.log('user joined room')
-    })
-
-
-    socket.on("send_message", (data) => {
-        // console.log(data,'the sss')
-        const { room, message } = data;
-        io.to(room).emit("receive_message", message); // Send to all in the room
-    });
-
-
+    io.emit("getOnlineUsers", Object.keys(userSocketMap))
+    // console.log(userId, 'the user id is ')
 
 
 
 
     // //socket.on is used to listen the events used on both client and server 
     socket.on("disconnect", () => {
-        console.log('disconneted ', socket.id)
+        delete userSocketMap[userId]
+        console.log('user disconnected', socket.id)
+        io.emit("getOnlineUsers", Object.keys(userSocketMap))
+
     })
 
 
 })
 
 
-module.exports = { app, io, server }
+module.exports = { app, io, server, recieverSocketId }
