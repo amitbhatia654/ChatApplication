@@ -2,10 +2,12 @@ import React, { useEffect, useMemo, useState, useRef } from "react";
 import Modal from "../pages/HelperPages/Modal";
 import { Form, Formik } from "formik";
 import Autocomplete from "@mui/material/Autocomplete";
-import { Button, TextField } from "@mui/material";
+import { Avatar, Button, TextField } from "@mui/material";
 import axiosInstance from "../ApiManager";
 import { useSelector } from "react-redux";
 import { useSocketContext } from "./SocketContext";
+import sendTone from "../assets/send_tone.mp3";
+import r_tone from "../assets/r_tone.mp3";
 
 export default function HomePage() {
   const user = useSelector((data) => data.loginUser);
@@ -51,9 +53,12 @@ export default function HomePage() {
         messages: [...prev.messages, res.data.m1],
       }));
 
-      console.log(res, "when user send the message");
+      if (res.status == 200) {
+        const audio = new Audio(sendTone);
+        audio.play();
 
-      if (res.status == 200) setMessage("");
+        setMessage("");
+      }
     } catch (error) {
       console.log(error, "error");
     }
@@ -70,7 +75,6 @@ export default function HomePage() {
 
   const fetchAllChats = async () => {
     const res = await axiosInstance.get("/api/all-chats");
-    // console.log(res, "the api response is ");
     if (res.status == 200) {
       setAllChats(res.data.chats);
     } else {
@@ -84,21 +88,38 @@ export default function HomePage() {
 
   useEffect(() => {
     fetchAllChats();
-  }, [selectedChat]);
+  }, []);
+
+  // behavior: "smooth";
 
   useEffect(() => {
     if (lastMessageRef.current) {
-      lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+      lastMessageRef.current.scrollIntoView();
     }
   }, [selectedChat.messages]);
 
   useEffect(() => {
     const checkMessage = socket?.on("new-message", (data) => {
-      console.log(data, "check message");
-
       const res = selectedChatRef.current?.participants?.some(
         (participant) => participant._id === data?.senderId
       );
+
+      allChats.forEach((chat) => {
+        // Check if both receiverId and senderId exist in the participants array
+        const receiverExists = chat.participants.some(
+          (participant) => participant._id === data.receiverId
+        );
+        const senderExists = chat.participants.some(
+          (participant) => participant._id === data.senderId
+        );
+
+        if (receiverExists && senderExists) {
+          // Push the new message into the messages array
+          chat.messages.push(data);
+          const audio = new Audio(r_tone);
+          audio.play();
+        }
+      });
 
       if (res) {
         // Add the new message to the messages array
@@ -116,15 +137,29 @@ export default function HomePage() {
     .flatMap((conversation) => conversation.participants)
     .filter((participant) => participant._id != user.id);
 
-  // console.log(chats, "the chats is");
-
   const isOnlineUser = (userId) => {
     return onlineUsers.includes(userId);
   };
 
+  const isCurrentChat = (chat) => {
+    return selectedChat?.participants?.find(
+      (participant) => participant._id == chat._id
+    );
+  };
+
+  const covertIntoTime = (createdAt) => {
+    const options = {
+      hour: "2-digit",
+      minute: "2-digit",
+    };
+
+    const date = new Date(createdAt);
+    return date.toLocaleTimeString("en-US", options);
+  };
+
   return (
     <>
-      <div className="px-4 py-4 chat-container">
+      <div className="py-1 chat-container">
         <div className="d-flex">
           <div className="chat-bar">
             <button
@@ -134,13 +169,15 @@ export default function HomePage() {
               New Chat{" "}
             </button>
 
-            <h4>My Chats</h4>
+            <h4 className="text-center mt-2">Recent Chats</h4>
             <div>
               {chats.length > 0 ? (
                 chats.map((chat, id) => (
                   <h6
+                    className={`chat-name-sidebar ${
+                      isCurrentChat(chat) && "current-chat"
+                    }`}
                     key={id}
-                    className={`${isOnlineUser(chat._id) && "text-danger"}`}
                     onClick={() => {
                       const result = allChats.find((conversation) =>
                         conversation.participants.some(
@@ -151,7 +188,10 @@ export default function HomePage() {
                       setSelectedChat(result);
                     }}
                   >
-                    {chat.name} {isOnlineUser(chat._id)}
+                    {chat.name}
+                    {isOnlineUser(chat._id) && (
+                      <span className="green-dot"></span>
+                    )}
                   </h6>
                 ))
               ) : (
@@ -160,18 +200,49 @@ export default function HomePage() {
             </div>
           </div>
 
-          {console.log(selectedChat, "the selected chat is ")}
-
-          <div className="message-box">
+          <div className="message-box ">
             {selectedChat?._id ? (
               <div>
-                <h5>
-                  {
+                <div className="d-flex px-2">
+                  <Avatar
+                    style={{ height: "37px", width: "37px" }}
+                    src={`${
+                      selectedChat?.participants?.find((d) => d._id != user.id)
+                        ?.profilePic
+                    }`}
+                    className="my-1"
+                  ></Avatar>
+                  {/* {console.log(
                     selectedChat?.participants?.find((d) => d._id != user.id)
-                      ?.name
-                  }
-                </h5>
-                <div className="msg-box scrollable-container">
+                  )} */}
+                  <div>
+                    <span className="user-name">
+                      {
+                        selectedChat?.participants?.find(
+                          (d) => d._id != user.id
+                        )?.name
+                      }
+                    </span>
+                    {isOnlineUser(
+                      selectedChat?.participants?.find((d) => d._id != user.id)
+                        ._id
+                    ) && <span className="green-dot"></span>}
+                    <br />
+
+                    <span className="online-text">
+                      {isOnlineUser(
+                        selectedChat?.participants?.find(
+                          (d) => d._id != user.id
+                        )._id
+                      ) ? (
+                        <>online</>
+                      ) : (
+                        "offline"
+                      )}
+                    </span>
+                  </div>
+                </div>{" "}
+                <div className="msg-box scrollable-container p-2">
                   {selectedChat.messages.length > 0 &&
                     selectedChat.messages.map((data, key) => {
                       const isLastMessage =
@@ -182,38 +253,50 @@ export default function HomePage() {
                           key={key}
                           ref={isLastMessage ? lastMessageRef : null}
                           className={`${
-                            data.senderId == user.id && "text-end"
+                            data.senderId == user.id && "text-end  "
                           } `}
                         >
-                          <span className="msg-span">{data.message}</span>
+                          <span
+                            className={`msg-span ${
+                              data.senderId == user.id
+                                ? "msg-span-left"
+                                : "msg-span-right"
+                            }`}
+                          >
+                            {data.message}
+                          </span>{" "}
+                          <span className="msg-time">
+                            {covertIntoTime(data?.createdAt)}
+                          </span>
                         </h6>
                       );
                     })}
                 </div>
-                <div className="mt-3">
+                <div className="">
                   <textarea
-                    type="textArea"
-                    cols={"100"}
-                    rows={"2"}
+                    // type="submit"
                     value={message}
-                    className=""
+                    className="my-text-input"
                     onChange={(e) => setMessage(e.target.value)}
                   />
                   <button
-                    className="btn btn-primary mb-5"
+                    className="btn btn-primary "
                     onClick={() => sendMessage()}
                   >
                     Send
                   </button>
                 </div>
-                <div className="text-end"> </div>
               </div>
             ) : (
               <div
                 className="d-flex justify-content-center align-items-center"
                 style={{ height: "500px" }}
               >
-                <h4 className="text-primary">Select user and start Chat</h4>
+                <h4 className="">
+                  Hello Welcome{" "}
+                  <span className="text-primary">{user.name} </span> <br></br>
+                  Start Chat With Your Friends
+                </h4>
               </div>
             )}
           </div>
@@ -243,7 +326,7 @@ export default function HomePage() {
                           onChange={(e, data) => {
                             props.setFieldValue("recieverId", data.value);
                           }}
-                          sx={{ width: 300 }}
+                          // sx={{ width: 300 }}
                           renderInput={(params) => (
                             <TextField {...params} label="Select User" />
                           )}

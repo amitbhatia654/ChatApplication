@@ -331,30 +331,105 @@ body {
 
 .chat-bar {
     width: 200px;
-    border: 1px solid black;
-    height: 580px;
+    /* border: 1px solid black; */
+    box-shadow: 1px 3px 2px 2px grey;
+    min-height: 85vh;
 
 }
 
 .message-box {
-    border: 1px solid black;
+    /* border: 1px solid black;  */
+    box-shadow: 2px 2px 2px 2px grey;
+    margin-left: 5x;
     width: 100%;
+    /* padding: 5px; */
 }
 
-.chat-container {
-    /* border: 1px solid; */
-}
+
 
 .msg-box {
-    height: 430px;
+    /* height: 430px; */
     border: 1px solid;
-    min-height: 430px;
-    max-height: 430px;
+    min-height: 70vh;
+    max-height: 70vh;
+    /* height: 70%; */
 }
 
 .msg-span {
     background-color: #bfcbee;
-    padding:2px;
+    padding: 8px;
+    /* max-height: 55px; */
+    max-width: 75vw;
+    display: inline-block;
+}
 
+.msg-span-left {
+    border-radius: 10px 10px 100px 0px;
+    padding-right: 18px;
+    padding-left: 10px;
+}
 
+.msg-span-right {
+    border-radius: 1px 10px 10px 100px;
+    padding-right: 10px;
+    padding-left: 15px;
+}
+
+.my-text-input {
+    width: 95%;
+    height: 50px;
+    margin-top: 10px;
+}
+
+.green-dot {
+    height: 10px;
+    width: 10px;
+    display: inline-block;
+    background-color: green;
+    border-radius: 50%;
+    /* margin-top: 20px; */
+    margin-left: 5px;
+}
+
+.chat-name-sidebar {
+    background-color: #d3d3f1;
+    padding: 6px;
+    /* color: #0e2e85; */
+    color: black;
+    cursor: pointer;
+    margin: 5px;
+    box-shadow: 1px 1px 2px blue;
+    border-radius: 5px;
+}
+
+.user-name {
+    /* background-color: #4c71d5; */
+    /* color: white; */
+    /* border: 1px solid; */
+    font-weight: bold;
+    margin: 5px;
+    font-size: 20px;
+}
+
+.online-text {
+    margin-left: 5px;
+    /* border: 1px solid; */
+    font-weight: 400;
+    display: block;
+    font-size: 12px;
+}
+
+.current-chat {
+    background-color: rgb(195, 195, 234);
+    /* color: white; */
+    font-weight: bold;
+}
+
+.msg-time {
+    font-size: 10px;
+    /* border: 1px solid; */
+    margin: 2px;
+    margin-left: 20px;
+    margin-right: 20px;
+    display: block;
 }

@@ -9,7 +9,7 @@ const login = async (req, res) => {
             return res.status(203).send('Email or Password is Incorrect!')
         }
 
-        token = jwt.sign({ email: user.email }, process.env.secretKey, { expiresIn: "24hr" })
+        token = jwt.sign({ email: user.email }, process.env.secretKey, { expiresIn: "30d" })
         return res.status(200).json({ message: "Log In succesfully", token, user })
     }
 

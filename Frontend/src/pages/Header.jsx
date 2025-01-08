@@ -85,7 +85,7 @@ export default function Header() {
           <div className="mt-1">
             <span className="fw-bold   text-primary fs-5 ">
               {" "}
-              [ {userData?.id} ] {userData?.name ?? "user"}
+              {userData?.name ?? "user"}
             </span>
             <Tooltip title="My Profile" placement="bottom-end">
               <IconButton onClick={handleOpenUserMenu}>

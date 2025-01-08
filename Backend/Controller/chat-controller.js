@@ -78,7 +78,7 @@ const getAllChats = async (req, res) => {
             participants: { $in: [senderId] }
         }).populate({
             path: "participants",
-            select: "-password -profilePic"
+            select: "-password"
         }).populate('messages');
 
 

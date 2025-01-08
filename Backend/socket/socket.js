@@ -20,21 +20,17 @@ const io = new Server(server, {
 
 const userSocketMap = {};
 
+
 const recieverSocketId = (userId) => {
     return userSocketMap[userId]
 }
 
 io.on("connection", (socket) => {
-    console.log('user connected', socket.id)
 
     const userId = socket.handshake.query.userId;
     if (userId != undefined) userSocketMap[userId] = socket.id
 
     io.emit("getOnlineUsers", Object.keys(userSocketMap))
-    // console.log(userId, 'the user id is ')
-
-
-
 
     // //socket.on is used to listen the events used on both client and server 
     socket.on("disconnect", () => {
