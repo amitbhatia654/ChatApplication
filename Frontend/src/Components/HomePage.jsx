@@ -8,23 +8,18 @@ import { useSelector } from "react-redux";
 import { useSocketContext } from "./SocketContext";
 import sendTone from "../assets/send_tone.mp3";
 import r_tone from "../assets/r_tone.mp3";
+import chat_tone from "../assets/chat-tone.mp3";
 
 export default function HomePage() {
   const user = useSelector((data) => data.loginUser);
-
   const [newChatModal, setNewChatModal] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
   const [allChats, setAllChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState({});
   const [message, setMessage] = useState("");
   const { onlineUsers, socket } = useSocketContext();
-
   const selectedChatRef = useRef(selectedChat);
   const lastMessageRef = useRef(null);
-
-  useEffect(() => {
-    selectedChatRef.current = selectedChat; // Update ref when selectedChat changes
-  }, [selectedChat]);
 
   const handleSubmit = async (values) => {
     try {
@@ -56,7 +51,6 @@ export default function HomePage() {
       if (res.status == 200) {
         const audio = new Audio(sendTone);
         audio.play();
-
         setMessage("");
       }
     } catch (error) {
@@ -83,10 +77,11 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    fetchAllUsers();
-  }, []);
+    selectedChatRef.current = selectedChat; // Update ref when selectedChat changes
+  }, [selectedChat]);
 
   useEffect(() => {
+    fetchAllUsers();
     fetchAllChats();
   }, []);
 
@@ -99,35 +94,41 @@ export default function HomePage() {
   }, [selectedChat.messages]);
 
   useEffect(() => {
-    const checkMessage = socket?.on("new-message", (data) => {
-      const res = selectedChatRef.current?.participants?.some(
+    socket?.on("new-message", (data) => {
+      const currentChat = selectedChatRef.current?.participants?.some(
         (participant) => participant._id === data?.senderId
       );
 
-      allChats.forEach((chat) => {
-        // Check if both receiverId and senderId exist in the participants array
-        const receiverExists = chat.participants.some(
-          (participant) => participant._id === data.receiverId
-        );
-        const senderExists = chat.participants.some(
-          (participant) => participant._id === data.senderId
-        );
-
-        if (receiverExists && senderExists) {
-          // Push the new message into the messages array
-          chat.messages.push(data);
-          const audio = new Audio(r_tone);
-          audio.play();
-        }
-      });
-
-      if (res) {
+      if (currentChat) {
         // Add the new message to the messages array
         setSelectedChat((prev) => ({
           ...prev,
           messages: [...prev.messages, data],
         }));
+        const audio = new Audio(chat_tone);
+        audio.play();
+      } else {
+        const audio = new Audio(r_tone);
+        audio.play();
+        fetchAllChats();
       }
+
+      // allChats.forEach((chat) => {
+      //   // Check if both receiverId and senderId exist in the participants array
+      //   const receiverExists = chat.participants.some(
+      //     (participant) => participant._id === data.receiverId
+      //   );
+      //   const senderExists = chat.participants.some(
+      //     (participant) => participant._id === data.senderId
+      //   );
+
+      //   if (receiverExists && senderExists) {
+      //     // Push the new message into the messages array
+      //     chat.messages.push(data);
+      //     const audio = new Audio(r_tone);
+      //     audio.play();
+      //   }
+      // });
     });
 
     return () => socket?.off("new-message");
@@ -272,13 +273,13 @@ export default function HomePage() {
                       );
                     })}
                 </div>
-                <div className="">
+                <div class="input-group ">
                   <textarea
-                    // type="submit"
                     value={message}
                     className="my-text-input"
                     onChange={(e) => setMessage(e.target.value)}
                   />
+
                   <button
                     className="btn btn-primary "
                     onClick={() => sendMessage()}

@@ -8,7 +8,7 @@
 }
 
 :root {
-    --box-color: #E7E7EE;
+    --box-color: #f4ece2;
 }
 
 
@@ -316,8 +316,9 @@ body {
 }
 
 .myheader {
-    background-color: #e6ebf1;
-    /* box-shadow: 1px 3px 2px rgb(228, 227, 234); */
+    background-color: #F4ECE2;
+    /* border-bottom: 1px solid; */
+    box-shadow: 1px 5px 8px rgb(223, 223, 200);
 }
 
 .mymodal {
@@ -332,27 +333,24 @@ body {
 .chat-bar {
     width: 200px;
     /* border: 1px solid black; */
-    box-shadow: 1px 3px 2px 2px grey;
+    /* box-shadow: 1px 3px 2px 2px rgb(189, 168, 168); */
+    border: 1px solid rgb(222, 194, 194);
     min-height: 85vh;
 
 }
 
 .message-box {
-    /* border: 1px solid black;  */
-    box-shadow: 2px 2px 2px 2px grey;
     margin-left: 5x;
     width: 100%;
-    /* padding: 5px; */
 }
 
 
 
 .msg-box {
-    /* height: 430px; */
-    border: 1px solid;
-    min-height: 70vh;
-    max-height: 70vh;
-    /* height: 70%; */
+    /* border: 1px solid; */
+    background-color: #E8CBA5;
+    min-height: 72vh;
+    max-height: 72vh;
 }
 
 .msg-span {
@@ -378,7 +376,7 @@ body {
 .my-text-input {
     width: 95%;
     height: 50px;
-    margin-top: 10px;
+    /* margin-top: 10px; */
 }
 
 .green-dot {
