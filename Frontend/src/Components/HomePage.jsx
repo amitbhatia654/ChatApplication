@@ -13,6 +13,7 @@ import chat_tone from "../assets/chat-tone.mp3";
 export default function HomePage() {
   const user = useSelector((data) => data.loginUser);
   const [newChatModal, setNewChatModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
   const [allChats, setAllChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState({});
@@ -68,12 +69,14 @@ export default function HomePage() {
   };
 
   const fetchAllChats = async () => {
+    setLoading(true);
     const res = await axiosInstance.get("/api/all-chats");
     if (res.status == 200) {
       setAllChats(res.data.chats);
     } else {
       setAllChats([]);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -112,23 +115,6 @@ export default function HomePage() {
         audio.play();
         fetchAllChats();
       }
-
-      // allChats.forEach((chat) => {
-      //   // Check if both receiverId and senderId exist in the participants array
-      //   const receiverExists = chat.participants.some(
-      //     (participant) => participant._id === data.receiverId
-      //   );
-      //   const senderExists = chat.participants.some(
-      //     (participant) => participant._id === data.senderId
-      //   );
-
-      //   if (receiverExists && senderExists) {
-      //     // Push the new message into the messages array
-      //     chat.messages.push(data);
-      //     const audio = new Audio(r_tone);
-      //     audio.play();
-      //   }
-      // });
     });
 
     return () => socket?.off("new-message");
@@ -157,22 +143,40 @@ export default function HomePage() {
     const date = new Date(createdAt);
     return date.toLocaleTimeString("en-US", options);
   };
+  let lastmsgDate = "";
+  const msgDate = (createdAt) => {
+    const date = createdAt.split("T")[0];
+    if (date != lastmsgDate) {
+      lastmsgDate = date;
+
+      const newDate = new Date(lastmsgDate);
+      const options = { month: "short", day: "numeric", year: "numeric" };
+      return new Intl.DateTimeFormat("en-US", options)
+        .format(newDate)
+        .replace(",", "");
+    }
+  };
 
   return (
     <>
-      <div className="py-1 chat-container">
+      <div className=" chat-container">
         <div className="d-flex">
           <div className="chat-bar">
-            <button
-              className="bbtn btn-primary m-1"
-              onClick={() => setNewChatModal(true)}
-            >
-              New Chat{" "}
-            </button>
-
-            <h4 className="text-center mt-2">Recent Chats</h4>
+            <div className="text-center">
+              <button
+                className="bbtn btn-primar m-1"
+                onClick={() => setNewChatModal(true)}
+              >
+                Create New Chat{" "}
+              </button>
+            </div>
+            <h4 className="text-center text-white mt-2">Recent Chats</h4>
             <div>
-              {chats.length > 0 ? (
+              {loading ? (
+                <div className="text-center">
+                  <span className="spinner-border text-warning"></span>
+                </div>
+              ) : chats.length > 0 ? (
                 chats.map((chat, id) => (
                   <h6
                     className={`chat-name-sidebar ${
@@ -204,7 +208,7 @@ export default function HomePage() {
           <div className="message-box ">
             {selectedChat?._id ? (
               <div>
-                <div className="d-flex px-2">
+                <div className="d-flex px-2 chat-user-box">
                   <Avatar
                     style={{ height: "37px", width: "37px" }}
                     src={`${
@@ -250,26 +254,31 @@ export default function HomePage() {
                         key === selectedChat.messages.length - 1;
 
                       return (
-                        <h6
-                          key={key}
-                          ref={isLastMessage ? lastMessageRef : null}
-                          className={`${
-                            data.senderId == user.id && "text-end  "
-                          } `}
-                        >
-                          <span
-                            className={`msg-span ${
-                              data.senderId == user.id
-                                ? "msg-span-left"
-                                : "msg-span-right"
-                            }`}
+                        <div>
+                          <div className="text-center text-secondary fw-light">
+                            {msgDate(data.createdAt)}
+                          </div>
+                          <h6
+                            key={key}
+                            ref={isLastMessage ? lastMessageRef : null}
+                            className={`${
+                              data.senderId == user.id && "text-end"
+                            } `}
                           >
-                            {data.message}
-                          </span>{" "}
-                          <span className="msg-time">
-                            {covertIntoTime(data?.createdAt)}
-                          </span>
-                        </h6>
+                            <span
+                              className={`msg-span ${
+                                data.senderId == user.id
+                                  ? "msg-span-left"
+                                  : "msg-span-right"
+                              }`}
+                            >
+                              {data.message}
+                            </span>{" "}
+                            <span className="msg-time">
+                              {covertIntoTime(data?.createdAt)}
+                            </span>
+                          </h6>
+                        </div>
                       );
                     })}
                 </div>
@@ -320,10 +329,17 @@ export default function HomePage() {
                       <div className="">
                         <Autocomplete
                           disablePortal
-                          options={allUsers.map((user) => ({
-                            label: user.name,
-                            value: user._id,
-                          }))}
+                          options={
+                            allUsers.length > 0
+                              ? allUsers?.map((user) => ({
+                                  label: user.name,
+                                  value: user._id,
+                                }))
+                              : {
+                                  label: "no user Found",
+                                  value: "no user found",
+                                }
+                          }
                           onChange={(e, data) => {
                             props.setFieldValue("recieverId", data.value);
                           }}

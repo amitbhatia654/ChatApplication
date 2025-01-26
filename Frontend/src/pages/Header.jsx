@@ -55,7 +55,7 @@ export default function Header() {
               height={"55px"}
               width={"150px"}
             /> */}
-            <h4 className="text-primary fw-bold">CHAT APP</h4>
+            <h3 className=" fw-bold text-warning mt-2">CHAT APP</h3>
           </span>
         </div>
 
@@ -83,7 +83,7 @@ export default function Header() {
           </div> */}
 
           <div className="mt-1">
-            <span className="fw-bold   text-primary fs-5 ">
+            <span className="fw-bold   text-light fs-5 ">
               {" "}
               {userData?.name ?? "user"}
             </span>

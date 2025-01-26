@@ -8,6 +8,8 @@ const chatRoute = require("./Router/chat-router")
 
 const allowedOrigins = [
     "http://localhost:5173",
+    "http://localhost:5174",
+
     "http://192.168.29.68:5173",
 ];
 
@@ -44,6 +46,6 @@ app.get('/', (req, res) => {
 });
 
 connectDb().then(() => {
-    server.listen(5000, () => console.log("server is running on port 5000"));
+    server.listen(5001, () => console.log("server is running on port 5001"));
 
 }).catch((err) => console.log("error occucered in Db or server", err))
