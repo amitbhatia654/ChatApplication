@@ -9,7 +9,7 @@ const chatRoute = require("./Router/chat-router")
 const allowedOrigins = [
     "http://localhost:5173",
     "http://localhost:5174",
-
+    "https://chat-application-frontend-orpin.vercel.app",
     "http://192.168.29.68:5173",
 ];
 
